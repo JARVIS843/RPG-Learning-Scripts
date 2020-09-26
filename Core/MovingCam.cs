@@ -10,11 +10,11 @@ namespace RPG.Core
     {
 
         // Start is called before the first frame update
-      public  Transform target;
+      [SerializeField]  Transform target;
         // Update is called once per frame
         void LateUpdate()
         {
-            GetComponent<Rigidbody>().transform.position = target.position;
+            transform.position = target.position;
         }
     }
 }
