@@ -15,15 +15,18 @@ namespace RPG.Combat
 
     float timeSinceLastAttack = 0;
 
-    Transform target;
+    Health target;
     private void Update()
         {
             timeSinceLastAttack +=Time.deltaTime;
 
             if(target == null) return;
+
+            if(target.IsDead()) return;
+
             if (!GetInRange())
             {
-                GetComponent<Mover>().MoveTo(target.position);
+                GetComponent<Mover>().MoveTo(target.transform.position);
             }
             else
             {
@@ -34,28 +37,42 @@ namespace RPG.Combat
 
         private void AttackBehavior()
         {
+            transform.LookAt(target.transform);
             if(timeSinceLastAttack > timebetweenAttacks)
             {
                 //This will trigger the Hit() event
-                GetComponent<Animator>().SetTrigger("attack");
+                TriggerAttack();
                 timeSinceLastAttack = 0;
             }
         }
 
+        private void TriggerAttack()
+        {
+            GetComponent<Animator>().ResetTrigger("stopAttack");
+            GetComponent<Animator>().SetTrigger("attack");
+        }
+
         private bool GetInRange()
         {
-            return Vector3.Distance(target.position, transform.position) < weaponRange;
+            return Vector3.Distance(target.transform.position, transform.position) < weaponRange;
         }
 
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            target = combatTarget.transform;
+            target = combatTarget.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            StopAttack();
             target = null;
+        }
+
+        private void StopAttack()
+        {
+            GetComponent<Animator>().SetTrigger("attack");
+            GetComponent<Animator>().ResetTrigger("stopAttack");
         }
 
         //Animation Event
@@ -63,9 +80,15 @@ namespace RPG.Combat
         {
             if(target !=null)
             {
-                Health healthComponent = target.GetComponent<Health>();
-                healthComponent.TakeDamage(weaponDamage);
+                target.TakeDamage(weaponDamage);
             }
+        }
+
+        public bool CanAttack(CombatTarget combatTarget)
+        {
+            if(combatTarget == null) return false;
+            Health targetToTest = combatTarget.GetComponent<Health>();
+            return (targetToTest != null) && !(targetToTest.IsDead());
         }
     }
 }

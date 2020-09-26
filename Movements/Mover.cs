@@ -33,8 +33,8 @@ namespace RPG.Movement
 
         public void MoveTo(Vector3 destination)
         {
-            agent.destination = destination;
             agent.isStopped = false;
+            agent.destination = destination;
         }
 
         public void Cancel()

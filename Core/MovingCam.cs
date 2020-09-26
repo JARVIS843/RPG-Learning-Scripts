@@ -10,7 +10,7 @@ namespace RPG.Core
     {
 
         // Start is called before the first frame update
-      [SerializeField]  Transform target;
+      [SerializeField]  Transform target = null;
         // Update is called once per frame
         void LateUpdate()
         {

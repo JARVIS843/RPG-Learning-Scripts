@@ -23,5 +23,10 @@ namespace RPG.Combat
             isDead = true;
             GetComponent<Animator>().SetTrigger("die");
         }
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
     }
 }
