@@ -9,8 +9,6 @@ namespace RPG.Movement
     public class Mover : MonoBehaviour,IAction
     {
         // Start is called before the first frame update
-        [SerializeField]
-        public Transform target;
         
         NavMeshAgent agent;
 
