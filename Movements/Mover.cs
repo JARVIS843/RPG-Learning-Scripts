@@ -12,13 +12,17 @@ namespace RPG.Movement
         
         NavMeshAgent agent;
 
+        Health health;
+
         private void Start()
         {
             agent = GetComponent<NavMeshAgent>();
+            health = GetComponent<Health>();
         }
         // Update is called once per frame
         void Update()
         {
+            agent.enabled = !health.IsDead();
             UpdateAnimator();
         }
 
