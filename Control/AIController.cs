@@ -14,6 +14,7 @@ namespace RPG.Control
         [SerializeField] float suspiciontime = 3f;
         [SerializeField] PatrolPath patrolPath;
         [SerializeField] float waypointTolerance = 1.0f;
+        [SerializeField] float waypointDwellTime = 3.0f;
     
         Fighter fighter;
 
@@ -23,6 +24,8 @@ namespace RPG.Control
         Vector3 guardPosition;
 
         float timeSinceLastSawPlayer = Mathf.Infinity;
+        float timeSinceArrivedAtWaypoint = Mathf.Infinity;
+        int currentWaypointIndex = 0;
         private void Start()
         {
             fighter = GetComponent<Fighter>();
@@ -32,14 +35,13 @@ namespace RPG.Control
         }
         private void Update()
         {
-            if(health.IsDead()) return;
+            if (health.IsDead()) return;
 
             if (InAttackRangeOfPlayer(player) && fighter.CanAttack(player))
             {
-                timeSinceLastSawPlayer = 0;
                 AttackBehaviour();
             }
-            else if(timeSinceLastSawPlayer < suspiciontime)
+            else if (timeSinceLastSawPlayer < suspiciontime)
             {
                 //Suspicion state
                 SuspicionBehaviour();
@@ -48,7 +50,13 @@ namespace RPG.Control
             {
                 PatrolBehaviour();
             }
-            timeSinceLastSawPlayer +=Time.deltaTime;
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
+            timeSinceLastSawPlayer += Time.deltaTime;
+            timeSinceArrivedAtWaypoint += Time.deltaTime;
         }
 
         private void PatrolBehaviour()
@@ -59,22 +67,25 @@ namespace RPG.Control
             {
                 if(AtWayPoint())
                 {
+                    timeSinceArrivedAtWaypoint = 0;
                     CycleWayPoint();
                 }
                 nextPosition = GetCurrentWayPoint();
             }
-
-            GetComponent<Mover>().StartMoveAction(nextPosition);
+            if(timeSinceArrivedAtWaypoint > waypointDwellTime)
+            {
+                GetComponent<Mover>().StartMoveAction(nextPosition);
+            }
         }
 
         private Vector3 GetCurrentWayPoint()
         {
-            throw new NotImplementedException();
+            return patrolPath.GetWayPoint(currentWaypointIndex);
         }
 
         private void CycleWayPoint()
         {
-            throw new NotImplementedException();
+            currentWaypointIndex = patrolPath.GetNextIndex(currentWaypointIndex);
         }
 
         private bool AtWayPoint()
@@ -90,6 +101,7 @@ namespace RPG.Control
 
         private void AttackBehaviour()
         {
+            timeSinceLastSawPlayer = 0;
             fighter.Attack(player);
         }
 
