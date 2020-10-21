@@ -11,6 +11,7 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
         Health health;
+        
         private void Start()
         {
             health = GetComponent<Health>();
@@ -51,7 +52,7 @@ namespace RPG.Control
                     //Below is not the original code
                     if(Camera.main.ScreenPointToRay(Input.mousePosition).origin.y>8)
                     {
-                       GetComponent<Mover>().StartMoveAction(hit.point);
+                       GetComponent<Mover>().StartMoveAction(hit.point,1f);
                     }
                     else
                     {

@@ -6,7 +6,7 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour,IAction
 {
-    [SerializeField] 
+    [SerializeField]
     float weaponRange = 2;
     [SerializeField]
     float timebetweenAttacks = 1f;
@@ -26,7 +26,7 @@ namespace RPG.Combat
 
             if (!GetInRange())
             {
-                GetComponent<Mover>().MoveTo(target.transform.position);
+                GetComponent<Mover>().MoveTo(target.transform.position,1f);
             }
             else
             {
