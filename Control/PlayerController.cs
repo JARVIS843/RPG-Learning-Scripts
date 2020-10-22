@@ -48,16 +48,8 @@ namespace RPG.Control
             if (hasHit)
             {
                  if (Input.GetMouseButton(0))
-                {
-                    //Below is not the original code
-                    if(Camera.main.ScreenPointToRay(Input.mousePosition).origin.y>8)
-                    {
+                {     
                        GetComponent<Mover>().StartMoveAction(hit.point,1f);
-                    }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 return true;
             }
