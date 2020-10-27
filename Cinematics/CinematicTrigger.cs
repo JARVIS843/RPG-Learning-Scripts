@@ -12,9 +12,8 @@ namespace RPG.Cinematics
             if((!alreadyTriggered) &&(other.gameObject.tag == "Player"))
             {
                 GetComponent<PlayableDirector>().Play();
+                alreadyTriggered = true;
             }
-            
-
         }
     }
 }
