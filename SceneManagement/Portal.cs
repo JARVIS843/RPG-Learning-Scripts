@@ -12,8 +12,16 @@ namespace RPG.SceneManagement
         private void OnTriggerEnter(Collider other) {
             if(other.tag == "Player")
             {
-                SceneManager.LoadScene(sceneToLoad);
+                StartCoroutine(Transition());
             }
+        }
+
+        private IEnumerator Transition()
+        {
+            DontDestroyOnLoad(gameObject);
+            yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            print("Scene Loaded");
+            Destroy(gameObject);
         }
     }
 }
